@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List</title>
+</head>
+<body>
+
+    <div>
+        <div>이미지 자리</div>
+        <ul th:each="item : ${itemList}">
+            <li th:text="${item.name}"></li>
+            <li th:text="${item.price}"></li>
+        </ul>
+    </div>
+
+
+</body>
+</html>
