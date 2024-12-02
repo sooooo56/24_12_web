@@ -9,7 +9,9 @@
     <div>
         <div>이미지 자리</div>
         <ul th:each="item : ${itemList}">
-            <li th:text="${item.name}"></li>
+            <li>
+                <a th:href="@{|/detail/${item.id}|}" th:text="${item.name}"></a>
+            </li>
             <li th:text="${item.price}"></li>
         </ul>
     </div>
