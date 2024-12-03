@@ -25,7 +25,7 @@ public class ItemController {
 
     @GetMapping("/detail/{id}")
     public String itemDetail(@PathVariable Long id, Model model){
-        Item item = itemService.getItem(id);
+        Item item = this.itemService.getItem(id);
         model.addAttribute("item",item);
 
         return "detail";
