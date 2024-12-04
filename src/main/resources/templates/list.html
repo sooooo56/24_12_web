@@ -1,18 +1,20 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content">
 
-    <div>
-        <div class="w-48 h-52">
-<!--            <img src="./img/img.jpg" alt="itemImg">-->
+    <div class="flex flex-col">
+        <div class="w-48">
+            <img src="/img/img.jpg" alt="itemImg">
             <div class="itemImg"></div>
         </div>
 
-        <ul th:each="item : ${itemList}">
-            <li>
-                <a th:href="@{|/detail/${item.id}|}" th:text="${item.name}"></a>
-            </li>
-            <li th:text="${item.price}"></li>
-        </ul>
+        <div>
+            <ul th:each="item : ${itemList}">
+                <li>
+                    <a th:href="@{|/detail/${item.id}|}" th:text="${item.name}"></a>
+                </li>
+                <li th:text="${item.price}"></li>
+            </ul>
+        </div>
     </div>
 
 </div>

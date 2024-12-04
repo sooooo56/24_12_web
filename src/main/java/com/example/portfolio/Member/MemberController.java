@@ -14,6 +14,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    //회원가입
     @GetMapping("/join")
     public String UserJoin(MemberForm memberForm){
         return "join";
@@ -31,7 +32,15 @@ public class MemberController {
             return "join";
         }
 
-        memberService.create(memberForm.getUsername(),memberForm.getPassword1(),memberForm.getEmail(),memberForm.getUserNickname());
+        memberService.userJoin(memberForm.getUsername(),memberForm.getPassword1()
+                ,memberForm.getEmail(),memberForm.getUserNickname());
         return "/redirect:/";
     }
+
+    // 로그인
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
 }
