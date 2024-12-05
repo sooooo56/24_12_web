@@ -41,13 +41,13 @@ public class MemberService {
 
 
     // 사용자 조회 (username 기준)
-    public Member findByUsername(String username) {
-        Optional<Member> memberOpt = memberRepository.findByUsername(username);
-        if (memberOpt.isPresent()){
-            return memberOpt.get();
-        } else {
-            throw new RuntimeException("username not found");
-        }
-    }
+//    public Member findByUsername(String username) {
+//        Optional<Member> memberOpt = memberRepository.findByUsername(username);
+//        if (memberOpt.isPresent()){
+//            return memberOpt.get();
+//        } else {
+//            throw new RuntimeException("username not found");
+//        }
+//    }
 
 }
