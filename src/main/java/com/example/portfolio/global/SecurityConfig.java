@@ -2,6 +2,7 @@ package com.example.portfolio.global;
 
 import com.example.portfolio.Member.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,11 +20,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/join", "/login","/main","list").permitAll()
+                        .requestMatchers("/join", "/login","/main","list", "/img/**", "/css/**","detail/**").permitAll()
                         .anyRequest().authenticated() // authenticated() 인증된 요청만 들여 보내기. permitAll() 모든 요청 들여 보내기
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .defaultSuccessUrl("/main",true)
                         .permitAll())
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

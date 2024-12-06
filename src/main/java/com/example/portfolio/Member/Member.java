@@ -19,6 +19,7 @@ public class Member {
     @Column(unique = true)
     private String username;
 
+    @Column(columnDefinition = "TEXT")
     private String password;
 
     @Column(unique = true)

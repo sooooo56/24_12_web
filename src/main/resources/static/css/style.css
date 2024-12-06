@@ -9,7 +9,4 @@
     background: url('../static/img/img.jpg') no-repeat center center/cover;
 }
 
-body{
-    width: 600px;
-    margin: 0 auto;
-}
+#bodyWidth{ margin: 0 auto; width:600px;}

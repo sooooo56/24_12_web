@@ -31,8 +31,8 @@ public class MemberController {
             return "join";
         }
 
-        memberService.userJoin(joinForm.getUsername(), joinForm.getPassword1()
-                , joinForm.getEmail(), joinForm.getUserNickname());
+        memberService.userJoin(joinForm.getUsername(), joinForm.getEmail(), joinForm.getPassword1()
+                , joinForm.getUserNickname());
         return "/redirect:/login";
     }
 
