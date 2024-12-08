@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>주문서</title>
+</head>
+<body>
+
+<div>
+    <!-- 상품 정보 -->
+    <div class="flex justify-center items-center min-h-screen flex-col">
+        <h2 class="text-lg font-bold" th:text="${item.name}"></h2>
+        <p class="text-gray-600" th:text="${item.price}"></p>
+        <p>색상: <span th:text="${color}"></span></p>
+        <p>사이즈: <span th:text="${size}"></span></p>
+        <p>수량: <span th:text="${quantity}"></span></p>
+    </div>
+
+    <!-- 배송 정보 -->
+    <form method="post" action="/order_submit">
+        <div>
+            <label>배송지</label>
+            <input type="text" name="deliveryAddress" required id="deliveryAddress"
+                   class="block w-full rounded-md border-gray-300">
+        </div>
+        <div>
+            <label>전화번호</label>
+            <input type="text" name="phoneNumber" required id="phoneNumber"
+                   class="block w-full rounded-md border-gray-300">
+        </div>
+
+        <input type="hidden" name="itemId" th:value="${item.id}">
+        <input type="hidden" name="color" th:value="${color}">
+        <input type="hidden" name="size" th:value="${size}">
+        <input type="hidden" name="quantity" th:value="${quantity}">
+
+        <button type="submit" class="mt-4 px-4 py-2 bg-black text-white rounded-md">
+            결제하기
+        </button>
+    </form>
+</div>
+
+</body>
+</html>

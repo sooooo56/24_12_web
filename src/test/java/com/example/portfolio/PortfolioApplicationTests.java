@@ -15,6 +15,7 @@ class PortfolioApplicationTests {
 	private ItemRepository itemRepository;
 	@Autowired
 	private BrandRepository brandRepository;
+	@Autowired
 
 	@Test
 	void contextLoads() {
@@ -32,5 +33,8 @@ class PortfolioApplicationTests {
 
 		brandRepository.save(brand);
 	}
+
+
+
 
 }

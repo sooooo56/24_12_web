@@ -1,21 +1,77 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content">
 
-    <div class="flex justify-center justify-between">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
 
-        <div class="w-48 h-52">
-            <img src="/img/img.jpg" alt="itemImg">
-            <div class="itemImg"></div>
+    <div>
+        <!-- 상품 정보 -->
+        <div class="flex justify-center items-center min-h-screen flex-col">
+            <img src="/img/img.jpg" alt="itemImg" class="container h-[720px] mx-auto mb-4 object-cover">
+            <div>
+                <h2 class="text-lg font-bold" th:text="${item.name}"></h2>
+                <p class="text-gray-600" th:text="${item.price}"></p>
+                <button onclick="openModal()" class="mt-4 px-4 bg-black py-2 text-white rounded-md">
+                    구매하기
+                </button>
+            </div>
         </div>
 
-        <div>
-            <!-- <div th:text="${item.brand.name}">브랜드명</div>-->
-            <div th:text="${item.name}">상품이름</div>
-            <div th:text="${item.price}">상품 가격</div>
-            <button type="submit">구매하기</button>
+        <!-- 옵션 선택 모달 -->
+        <div id="modal"
+             class="fixed bottom-0 left-0 w-full bg-white p-6 rounded-t-lg shadow-lg transform translate-y-full transition-transform duration-300">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold">옵션 선택</h2>
+                <button class="text-gray-500 hover:text-black" onclick="closeModal()">닫기</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">색상</label>
+                    <select id="color" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                        <option>블랙</option>
+                        <option>브라운</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">사이즈</label>
+                    <select id="size" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                        <option>S</option>
+                        <option>M</option>
+                        <option>L</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">수량</label>
+                    <input id="quantity" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="1">
+                </div>
+            </div>
+            <button onclick="goToOrderForm()" class="mt-6 w-full px-4 py-2 bg-black text-white rounded-md">
+                구매하기
+            </button>
         </div>
-
     </div>
+
+    <script>
+        const modal = document.getElementById('modal');
+
+        function openModal() {
+            modal.classList.remove('translate-y-full'); // 모달 열기
+        }
+
+        function closeModal() {
+            modal.classList.add('translate-y-full'); // 모달 닫기
+        }
+
+        function goToOrderForm() {
+            const color = document.getElementById('color').value;
+            const size = document.getElementById('size').value;
+            const quantity = document.getElementById('quantity').value;
+
+            const params = new URLSearchParams({ color, size, quantity });
+            window.location.href = `/order_form?${params.toString()}`; // 주문서 페이지로 이동
+        }
+    </script>
+
 
 
 </div>

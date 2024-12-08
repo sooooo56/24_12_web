@@ -2,6 +2,7 @@ package com.example.portfolio.Member;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Getter
@@ -17,9 +18,9 @@ public class Member {
     private Long id;
 
     @Column(unique = true)
+    @Size(min = 3, max = 20)
     private String username;
 
-    @Column(columnDefinition = "TEXT")
     private String password;
 
     @Column(unique = true)
