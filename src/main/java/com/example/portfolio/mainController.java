@@ -18,5 +18,10 @@ public class mainController {
         return "main";
     }
 
+    // 마이페이지
+    @GetMapping("/mypage")
+    public String myPage(){
+        return "mypage";
+    }
 
 }

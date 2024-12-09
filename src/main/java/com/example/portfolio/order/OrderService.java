@@ -17,15 +17,16 @@ public class OrderService {
         return itemService.getItem(id);
     }
 
-    public Order createOrder(Long itemId, String color, String size, int quantity, String deliveryAddress, String phoneNumber) {
-        Item item = itemService.getItem(itemId);
+    public Order createOrder(Long id, String color, String size, int quantity,
+                             String deliveryAddress, String phoneNumber) {
+        Item item = itemService.getItem(id);
         if (item == null) {
             throw new IllegalArgumentException("유효하지 않은 상품 ID입니다.");
         }
 
         Order order = Order.builder()
-                .item(item)
-                .color(color)
+//                .item(item)
+//                .color(color)
                 .size(size)
                 .quantity(quantity)
                 .deliveryAddress(deliveryAddress)

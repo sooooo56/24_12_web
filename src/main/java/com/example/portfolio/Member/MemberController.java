@@ -42,10 +42,4 @@ public class MemberController {
         return "login";
     }
 
-    // 마이페이지
-    @GetMapping("/mypage")
-    public String myPage(){
-        return "mypage";
-    }
-
 }

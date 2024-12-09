@@ -34,17 +34,22 @@ public class OrderController {
         return "order_form";
     }
 
+    @GetMapping("/order_submit")
+    public String submitOrder(){
+        return "redirect:/order_success";
+    }
+
     @PostMapping("/order_submit")
-    public String submitOrder( @RequestParam Long itemId,
+    public String submitOrder( @RequestParam Long id,
                                @RequestParam String color,
                                @RequestParam String size,
                                @RequestParam int quantity,
                                @RequestParam String deliveryAddress,
                                @RequestParam String phoneNumber){
 
-        Order order = orderService.createOrder(itemId, color, size, quantity, deliveryAddress, phoneNumber);
+        Order order = orderService.createOrder(id, color, size, quantity, deliveryAddress, phoneNumber);
 
-        return "redirect:/order_success?orderId=" + order.getId();
+        return "redirect:/order_success";
     }
 
 }
