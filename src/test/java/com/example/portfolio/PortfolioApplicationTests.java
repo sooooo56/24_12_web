@@ -16,6 +16,7 @@ class PortfolioApplicationTests {
 	@Autowired
 	private BrandRepository brandRepository;
 	@Autowired
+	private Brand brand;
 
 	@Test
 	void contextLoads() {
@@ -34,6 +35,14 @@ class PortfolioApplicationTests {
 		brandRepository.save(brand);
 	}
 
+	@Test
+	void test() {
+		Brand brand = Brand.builder()
+				.brandName("레더리")
+				.build();
+
+		brandRepository.save(brand);
+	}
 
 
 

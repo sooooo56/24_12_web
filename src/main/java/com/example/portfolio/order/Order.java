@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "orders")
 public class Order {
 
     @Id
@@ -21,7 +22,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "member_id")
-    private Member sss;
+    private Member member;
 
     @ManyToOne
     @JoinColumn(name = "item_id")
