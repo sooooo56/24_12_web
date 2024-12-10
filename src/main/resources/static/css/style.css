@@ -5,8 +5,4 @@
     font-style: normal;
 }
 
-.itemImg{
-    background: url('../static/img/img.jpg') no-repeat center center/cover;
-}
-
 #bodyWidth{ margin: 0 auto; width:600px;}

@@ -33,7 +33,7 @@ public class MemberController {
 
         memberService.userJoin(joinForm.getUsername(), joinForm.getEmail(), joinForm.getPassword1()
                 , joinForm.getUserNickname());
-        return "/redirect:/login";
+        return "redirect:/login";
     }
 
     // 로그인

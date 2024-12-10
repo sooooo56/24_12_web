@@ -34,11 +34,6 @@ public class OrderController {
         return "order_form";
     }
 
-    @GetMapping("/order_submit")
-    public String submitOrder(){
-        return "redirect:/order_success";
-    }
-
     @PostMapping("/order_submit")
     public String submitOrder( @RequestParam Long id,
                                @RequestParam String color,
@@ -50,6 +45,12 @@ public class OrderController {
         Order order = orderService.createOrder(id, color, size, quantity, deliveryAddress, phoneNumber);
 
         return "redirect:/order_success";
+    }
+
+    @GetMapping("/order_success")
+    public String submitOrder() {
+
+        return "order_success";
     }
 
 }

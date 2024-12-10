@@ -25,8 +25,8 @@ public class OrderService {
         }
 
         Order order = Order.builder()
-//                .item(item)
-//                .color(color)
+                .item(item)
+                .color(color)
                 .size(size)
                 .quantity(quantity)
                 .deliveryAddress(deliveryAddress)
