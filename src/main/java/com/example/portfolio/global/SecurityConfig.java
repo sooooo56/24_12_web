@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -20,9 +21,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/join", "/login","/main","list","/", "/img/**", "/css/**","detail/**").permitAll()
+                        .requestMatchers("/join", "/login","/main","list","/", "/confirm","/success", "/img/**", "/css/**","detail/**").permitAll()
                         .anyRequest().authenticated() // authenticated() 인증된 요청만 들여 보내기. permitAll() 모든 요청 들여 보내기
                 )
+                .csrf((AbstractHttpConfigurer::disable))
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/main",true)
