@@ -16,30 +16,30 @@ public class MemberController {
     //회원가입
     @GetMapping("/join")
     public String UserJoin(joinForm joinForm){
-        return "join";
+        return "/member/join";
     }
 
     @PostMapping("/join")
     public String UserJoin(@Valid joinForm joinForm, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
-            return "join";
+            return "/member/join";
         }
 
         if (!joinForm.getPassword1().equals(joinForm.getPassword2())){
             bindingResult.rejectValue("password2", "passwordInCorrect",
                     "2개의 패스워드가 일치하지 않습니다.");
-            return "join";
+            return "/member/join";
         }
 
         memberService.userJoin(joinForm.getUsername(), joinForm.getEmail(), joinForm.getPassword1()
                 , joinForm.getUserNickname());
-        return "redirect:/login";
+        return "redirect:/member/login";
     }
 
     // 로그인
     @GetMapping("/login")
     public String login(){
-        return "login";
+        return "/member/login";
     }
 
 }

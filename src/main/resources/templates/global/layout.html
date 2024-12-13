@@ -19,12 +19,12 @@
 
 <body style="width:600px; margin:0 auto;">
 <!-- 네비게이션바 -->
-<nav th:replace="~{navbar :: navbarFragment}"></nav>
+<nav th:replace="~{global/navbar :: navbarFragment}"></nav>
 
 <!-- 기본 템플릿 안에 삽입될 내용 Start -->
 <th:block layout:fragment="content"></th:block>
 
 <!-- 하단 메뉴바-->
-<nav th:replace="~{gnbNavbar :: gnbNavbarFragment}"></nav>
+<nav th:replace="~{global/gnbNavbar :: gnbNavbarFragment}"></nav>
 </body>
 </html>

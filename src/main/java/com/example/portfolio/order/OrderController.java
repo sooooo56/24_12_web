@@ -31,7 +31,7 @@ public class OrderController {
         model.addAttribute("quantity",quantity);
         model.addAttribute("item",item);
 
-        return "order_form";
+        return "/order/order_form";
     }
 
     @PostMapping("/order_submit")
@@ -44,13 +44,13 @@ public class OrderController {
 
         Order order = orderService.createOrder(id, color, size, quantity, deliveryAddress, phoneNumber);
 
-        return "redirect:/order_success";
+        return "redirect:/order/order_success";
     }
 
     @GetMapping("/order_success")
     public String submitOrder() {
 
-        return "order_success";
+        return "/order/order_success";
     }
 
 }
