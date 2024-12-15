@@ -4,20 +4,20 @@
   <div>
     카테고리 리스트
   </div>
-  <div>배너</div>
+  <div class="width-[568px] height-[568px] bg-gray-800" >배너</div>
   <div>
     <a href="/list">리스트</a>
   </div>
-  <div>
-    <a href="/join">회원가입</a>
-  </div>
-  <div>
-    <a href="/login">로그인</a>
-  </div>
-  <div>
-    <a href="/logout">로그아웃</a>
-  </div>
 
+  <div >
+    <a sec:authorize="isAnonymous()" th:href="@{/join}">회원가입</a>
+  </div>
+  <div  >
+    <a sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a>
+  </div>
+  <div >
+    <a sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a>
+  </div>
 
 </div>
 </html>

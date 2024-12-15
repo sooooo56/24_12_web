@@ -15,12 +15,12 @@ public class MemberController {
 
     //회원가입
     @GetMapping("/join")
-    public String UserJoin(joinForm joinForm){
+    public String UserJoin(JoinForm joinForm){
         return "/member/join";
     }
 
     @PostMapping("/join")
-    public String UserJoin(@Valid joinForm joinForm, BindingResult bindingResult){
+    public String UserJoin(@Valid JoinForm joinForm, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             return "/member/join";
         }
@@ -31,8 +31,12 @@ public class MemberController {
             return "/member/join";
         }
 
-        memberService.userJoin(joinForm.getUsername(), joinForm.getEmail(), joinForm.getPassword1()
-                , joinForm.getUserNickname());
+        try {
+            memberService.userJoin(joinForm); // 비즈니스 로직 위임
+        } catch (RuntimeException e) {
+            bindingResult.reject("joinError", e.getMessage());
+            return "/member/join";
+        }
         return "redirect:/member/login";
     }
 

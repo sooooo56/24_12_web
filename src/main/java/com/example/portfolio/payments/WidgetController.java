@@ -1,5 +1,6 @@
 package com.example.portfolio.payments;
 
+import com.example.portfolio.order.OrderForm;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -7,9 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -75,7 +75,30 @@ public class WidgetController {
     }
 
     @GetMapping("/checkout")
-    public String checkout(){
+    public String checkout(OrderForm orderForm){
+        return "payments/checkout";
+    }
+
+    @PostMapping("/checkout")
+    public String checkout(
+            @RequestParam Long id,
+            @RequestParam String color,
+            @RequestParam String size,
+            @RequestParam int quantity,
+            @RequestParam String deliveryAddress,
+            @RequestParam String phoneNumber,
+            @RequestParam Long price,
+            Model model
+    ) {
+        // 결제 정보 모델에 추가
+        model.addAttribute("id", id);
+        model.addAttribute("color", color);
+        model.addAttribute("size", size);
+        model.addAttribute("quantity", quantity);
+        model.addAttribute("deliveryAddress", deliveryAddress);
+        model.addAttribute("phoneNumber", phoneNumber);
+        model.addAttribute("price", price);
+
         return "payments/checkout";
     }
 

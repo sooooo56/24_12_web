@@ -28,10 +28,10 @@ public class MemberDetailService implements UserDetailsService {
         }
 
         Member member = memberOptional.get();
+
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-
         User loginedUser = new User(member.getUsername(),member.getPassword(),authorities);
-
         return loginedUser;
+
     }
 }
