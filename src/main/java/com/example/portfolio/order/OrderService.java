@@ -5,6 +5,7 @@ import com.example.portfolio.Member.MemberService;
 import com.example.portfolio.item.Item;
 import com.example.portfolio.item.ItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,10 @@ public class OrderService {
         Item item = itemService.getItem(id);
         if (item == null) {
             throw new IllegalArgumentException("유효하지 않은 상품 ID입니다.");
+        }
+
+        if (member == null) {
+            member = memberService.getCurrentMember();
         }
 
         Order order = Order.builder()

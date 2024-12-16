@@ -1,6 +1,8 @@
 package com.example.portfolio.payments;
 
 import com.example.portfolio.order.OrderForm;
+import com.example.portfolio.order.OrderService;
+import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -18,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @Controller
+@RequiredArgsConstructor
 public class WidgetController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -81,50 +84,18 @@ public class WidgetController {
     }
 
     @PostMapping("/checkout")
-    public String checkout(
-            @RequestParam Long id,
-            @RequestParam String color,
-            @RequestParam String size,
-            @RequestParam int quantity,
-            @RequestParam String deliveryAddress,
-            @RequestParam String phoneNumber,
-            @RequestParam Long price,
-            Model model
-    ) {
-        // 결제 정보 모델에 추가
-        model.addAttribute("id", id);
-        model.addAttribute("color", color);
-        model.addAttribute("size", size);
-        model.addAttribute("quantity", quantity);
-        model.addAttribute("deliveryAddress", deliveryAddress);
-        model.addAttribute("phoneNumber", phoneNumber);
-        model.addAttribute("price", price);
-
+    public String checkout() {
         return "payments/checkout";
     }
 
     @GetMapping("/success")
-    public String success(@RequestParam String orderId, 
-                         @RequestParam String paymentKey, 
-                         @RequestParam Long amount,
-                         Model model) {
-        try {
-            // 결제 승인 요청
-            JSONObject paymentResponse = confirmPayment(paymentKey, orderId, amount);
-            model.addAttribute("payment", paymentResponse);
-            return "payments/success";
-        } catch (Exception e) {
-            logger.error("Payment confirmation failed", e);
-            return "redirect:/fail";
-        }
+    public String success() {
+        return "payments/success";
     }
 
     @GetMapping("/fail")
-    public String fail(@RequestParam(required = false) String message,
-                      @RequestParam(required = false) String code,
-                      Model model) {
-        model.addAttribute("message", message);
-        model.addAttribute("code", code);
+    public String fail() {
+
         return "payments/fail";
     }
 }

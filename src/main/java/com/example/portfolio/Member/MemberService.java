@@ -1,8 +1,12 @@
 package com.example.portfolio.Member;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,5 +33,21 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+//    public Member getMemberId(Long id){
+//        Optional<Member> member = memberRepository.findById(id);
+//        if (member.isPresent()){
+//            return member.get();
+//        } else {
+//            throw new RuntimeException();
+//        }
+//    }
+
+    // 현재 로그인한 회원 조회 메서드 추가
+    public Member getCurrentMember() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        return memberRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalStateException("로그인이 필요합니다."));
+    }
 
 }
