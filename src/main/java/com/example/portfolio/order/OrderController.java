@@ -41,21 +41,31 @@ public class OrderController {
 
 
     @PostMapping("/order_submit")
-    public String submitOrder( @RequestParam Long id,
-                               @RequestParam String color,
-                               @RequestParam String size,
-                               @RequestParam int quantity,
-                               @RequestParam String deliveryAddress,
-                               @RequestParam String phoneNumber,
-                               @AuthenticationPrincipal Member member){
+    public String submitOrder(@RequestParam Long id,
+                             @RequestParam String color,
+                             @RequestParam String size,
+                             @RequestParam int quantity,
+                             @RequestParam String deliveryAddress,
+                             @RequestParam String phoneNumber,
+                             @AuthenticationPrincipal Member member,
+                             Model model) {
 
-//        if (member == null) {
-//            return "redirect:/login"; // 로그인되지 않은 경우
-//        }
+        Item item = orderService.getItemId(id);
+        Long price = item.getPrice() * (long)quantity;
+        
+        // 결제 페이지에 필요한 정보를 모델에 추가
+        model.addAttribute("item", item);
+        model.addAttribute("color", color);
+        model.addAttribute("size", size);
+        model.addAttribute("quantity", quantity);
+        model.addAttribute("deliveryAddress", deliveryAddress);
+        model.addAttribute("phoneNumber", phoneNumber);
+        model.addAttribute("price", price);
+        model.addAttribute("member", member);
 
-        orderService.createOrder(member, id, color, size, quantity, deliveryAddress, phoneNumber);
-//        return "redirect:/checkout";
-        return "redirect:/order_success";
+        // orderService.createOrder(member, id, color, size, quantity, deliveryAddress, phoneNumber);
+       return "redirect:/checkout";
+        // return "redirect:/order_success";
     }
 
     @GetMapping("/order_success")

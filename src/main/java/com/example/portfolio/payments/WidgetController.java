@@ -21,6 +21,7 @@ import java.util.Base64;
 public class WidgetController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final OrderService orderService;
 
     @RequestMapping(value = "/confirm")
     public ResponseEntity<JSONObject> confirmPayment(@RequestBody String jsonBody) throws Exception {
@@ -103,12 +104,27 @@ public class WidgetController {
     }
 
     @GetMapping("/success")
-    public String success(){
-        return "payments/success";
+    public String success(@RequestParam String orderId, 
+                         @RequestParam String paymentKey, 
+                         @RequestParam Long amount,
+                         Model model) {
+        try {
+            // 결제 승인 요청
+            JSONObject paymentResponse = confirmPayment(paymentKey, orderId, amount);
+            model.addAttribute("payment", paymentResponse);
+            return "payments/success";
+        } catch (Exception e) {
+            logger.error("Payment confirmation failed", e);
+            return "redirect:/fail";
+        }
     }
 
     @GetMapping("/fail")
-    public String fail(){
+    public String fail(@RequestParam(required = false) String message,
+                      @RequestParam(required = false) String code,
+                      Model model) {
+        model.addAttribute("message", message);
+        model.addAttribute("code", code);
         return "payments/fail";
     }
 }
