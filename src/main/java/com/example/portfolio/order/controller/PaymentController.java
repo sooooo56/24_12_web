@@ -3,6 +3,7 @@ package com.example.portfolio.order.controller;
 import com.example.portfolio.Member.Member;
 import com.example.portfolio.item.Item;
 import com.example.portfolio.order.dto.OrderForm;
+import com.example.portfolio.order.entity.Order;
 import com.example.portfolio.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,18 +52,19 @@ public class PaymentController {
         }
     }
 
-    @GetMapping("/order/success")
+    @GetMapping("/success")
     public String paymentSuccess(@RequestParam String paymentKey,
                                @RequestParam String orderId,
                                @RequestParam Long amount,
                                @AuthenticationPrincipal Member member,
-                               @ModelAttribute OrderForm orderForm) {
+                               @ModelAttribute OrderForm orderForm,
+                               Model model) {
         try {
             // 결제 승인 요청
-            JSONObject paymentConfirm = confirmPayment(paymentKey, orderId, amount);
+//            JSONObject paymentConfirm = confirmPayment(paymentKey, orderId, amount);
             
             // 결제 성공 시 주문 생성
-            orderService.createOrder(
+            Order order = orderService.createOrder(
                 member,
                 orderForm.getId(),
                 orderForm.getColor(),
@@ -71,14 +73,21 @@ public class PaymentController {
                 orderForm.getDeliveryAddress(),
                 orderForm.getPhoneNumber()
             );
-            return "redirect:/order/success";
+
+            // success.html에 전달할 데이터 추가
+            model.addAttribute("order", order);
+            model.addAttribute("member", member);
+            model.addAttribute("orderForm", orderForm);
+            model.addAttribute("amount", amount);
+            
+            return "order/success";
         } catch (Exception e) {
             log.error("Payment success handling error: {}", e.getMessage());
             return "redirect:/order/fail";
         }
     }
 
-    @GetMapping("/order/fail")
+    @GetMapping("/fail")
     public String paymentFail() {
         return "order/fail";
 

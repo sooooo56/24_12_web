@@ -1,143 +1,146 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
+  <head>
     <meta charset="utf-8" />
     <script src="https://js.tosspayments.com/v2/standard"></script>
-</head>
-<body style="width: 600px; margin: 0 auto;">
-<div class="order-info">
-    <h3>주문 정보</h3>
-    <p>상품명: <span th:text="${item.name}"></span></p>
-    <p>수량: <span th:text="${orderForm.quantity}"></span></p>
-    <p>색상: <span th:text="${orderForm.color}"></span></p>
-    <p>사이즈: <span th:text="${orderForm.size}"></span></p>
-    <p>배송주소: <span th:text="${orderForm.deliveryAddress}"></span></p>
-    <p>연락처: <span th:text="${orderForm.phoneNumber}"></span></p>
-    <p>결제금액: <span th:text="${price}"></span>원</p>
-</div>
+  </head>
+  <body style="width: 600px; margin: 0 auto;">
+    <div class="order-info">
+      <h3>주문 정보</h3>
+      <p>상품명: <span th:text="${item.name}"></span></p>
+      <p>수량: <span th:text="${orderForm.quantity}"></span></p>
+      <p>색상: <span th:text="${orderForm.color}"></span></p>
+      <p>사이즈: <span th:text="${orderForm.size}"></span></p>
+      <p>배송주소: <span th:text="${orderForm.deliveryAddress}"></span></p>
+      <p>연락처: <span th:text="${orderForm.phoneNumber}"></span></p>
+      <p>결제금액: <span th:text="${price}"></span>원</p>
+    </div>
 
     <!-- 할인 쿠폰 -->
     <div>
-        <input type="checkbox" id="coupon-box" />
-        <label for="coupon-box"> 5,000원 쿠폰 적용 </label>
+      <input type="checkbox" id="coupon-box" />
+      <label for="coupon-box"> 5,000원 쿠폰 적용 </label>
     </div>
     <!-- 결제 UI -->
     <div id="payment-method"></div>
     <!-- 이용약관 UI -->
     <div id="agreement"></div>
     <!-- 결제하기 버튼 -->
-    <button class="button" id="payment-button" style="margin-top: 30px">결제하기</button>
+    <button class="button" id="payment-button" style="margin-top: 30px">
+      결제하기
+    </button>
 
     <script th:inline="javascript">
-        // 서버에서 전달된 데이터를 안전하게 가져오기
-        const orderData = {
-            price: /*[[${price}]]*/ 0,
-            itemName: /*[[${item.name}]]*/ '',
-            memberEmail: /*[[${member?.email}]]*/ '',
-            memberName: /*[[${member?.name}]]*/ '',
-            phoneNumber: /*[[${orderForm?.phoneNumber}]]*/ '',
-            memberId: /*[[${member != null ? member.id : null}]]*/ null
-        };
+      // 서버에서 전달된 데이터를 안전하게 가져오기
+      const orderData = {
+        price: /*[[${price}]]*/ 0,
+        itemName: /*[[${item.name}]]*/ "",
+        memberEmail: /*[[${member?.email}]]*/ "",
+        memberName: /*[[${member?.name}]]*/ "",
+        phoneNumber: /*[[${orderForm?.phoneNumber}]]*/ "",
+        memberId: /*[[${member != null ? member.id : null}]]*/ null,
+      };
 
-        // 결제 위젯 초기화 함수
-        async function initializePaymentWidget() {
-            try {
-                const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
-                const tossPayments = TossPayments(clientKey);
+      // 결제 위젯 초기화 함수
+      async function initializePaymentWidget() {
+        try {
+          const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+          const tossPayments = TossPayments(clientKey);
 
-                // customerKey 설정 로직 개선
-                let customerKey;
-                if (orderData.memberId) {
-                    customerKey = orderData.memberId.toString();
-                } else {
-                    customerKey = TossPayments.ANONYMOUS;
-                }
+          // customerKey 설정 로직 개선
+          let customerKey;
+          if (orderData.memberId) {
+            customerKey = orderData.memberId.toString();
+          } else {
+            customerKey = TossPayments.ANONYMOUS;
+          }
 
-                return tossPayments.widgets({ customerKey });
-            } catch (error) {
-                console.error('Widget initialization error:', error);
-                throw error;
-            }
+          return tossPayments.widgets({ customerKey });
+        } catch (error) {
+          console.error("Widget initialization error:", error);
+          throw error;
         }
+      }
 
-        // 메인 함수
-        async function main() {
+      // 메인 함수
+      async function main() {
+        try {
+          const button = document.getElementById("payment-button");
+          if (!button) {
+            throw new Error("Payment button not found");
+          }
+
+          const coupon = document.getElementById("coupon-box");
+          if (!coupon) {
+            throw new Error("Coupon checkbox not found");
+          }
+
+          // 결제 위젯 초기화
+          const widgets = await initializePaymentWidget();
+
+          // 초기 결제 금액 설정
+          const initialAmount = {
+            currency: "KRW",
+            value: orderData.price,
+          };
+          await widgets.setAmount(initialAmount);
+
+          // UI 렌더링
+          await Promise.all([
+            widgets.renderPaymentMethods({
+              selector: "#payment-method",
+              variantKey: "DEFAULT",
+            }),
+            widgets.renderAgreement({
+              selector: "#agreement",
+              variantKey: "AGREEMENT",
+            }),
+          ]);
+
+          // 쿠폰 적용 이벤트
+          let currentAmount = orderData.price;
+          coupon.addEventListener("change", async () => {
+            currentAmount = coupon.checked
+              ? orderData.price - 5000
+              : orderData.price;
+            await widgets.setAmount({
+              currency: "KRW",
+              value: currentAmount,
+            });
+          });
+
+          // 결제하기 버튼 이벤트
+          button.addEventListener("click", async () => {
             try {
-                const button = document.getElementById("payment-button");
-                if (!button) {
-                    throw new Error('Payment button not found');
-                }
+              if (!orderData.itemName) {
+                throw new Error("상품명이 없습니다.");
+              }
 
-                const coupon = document.getElementById("coupon-box");
-                if (!coupon) {
-                    throw new Error('Coupon checkbox not found');
-                }
+              const orderId = "order_" + Date.now();
+              const paymentData = {
+                orderId: orderId,
+                orderName: orderData.itemName,
+                successUrl: `${window.location.origin}/success`,
+                failUrl: `${window.location.origin}/fail`,
+                customerEmail: orderData.memberEmail,
+                customerName: orderData.memberName,
+                customerMobilePhone: orderData.phoneNumber,
+              };
 
-                // 결제 위젯 초기화
-                const widgets = await initializePaymentWidget();
-
-                // 초기 결제 금액 설정
-                const initialAmount = {
-                    currency: "KRW",
-                    value: orderData.price
-                };
-                await widgets.setAmount(initialAmount);
-
-                // UI 렌더링
-                await Promise.all([
-                    widgets.renderPaymentMethods({
-                        selector: "#payment-method",
-                        variantKey: "DEFAULT"
-                    }),
-                    widgets.renderAgreement({
-                        selector: "#agreement",
-                        variantKey: "AGREEMENT"
-                    })
-                ]);
-
-                // 쿠폰 적용 이벤트
-                let currentAmount = orderData.price;
-                coupon.addEventListener("change", async () => {
-                    currentAmount = coupon.checked ? orderData.price - 5000 : orderData.price;
-                    await widgets.setAmount({
-                        currency: "KRW",
-                        value: currentAmount
-                    });
-                });
-
-                // 결제하기 버튼 이벤트
-                button.addEventListener("click", async () => {
-                    try {
-                        if (!orderData.itemName) {
-                            throw new Error('상품명이 없습니다.');
-                        }
-
-                        const orderId = 'order_' + Date.now();
-                        const paymentData = {
-                            orderId: orderId,
-                            orderName: orderData.itemName,
-                            successUrl: `${window.location.origin}/order/success`,
-                            failUrl: `${window.location.origin}/order/fail`,
-                            customerEmail: orderData.memberEmail,
-                            customerName: orderData.memberName,
-                            customerMobilePhone: orderData.phoneNumber
-                        };
-
-                        await widgets.requestPayment(paymentData);
-                    } catch (error) {
-                        console.error('Payment request error:', error);
-                        alert('결제 요청 중 오류가 발생했습니다: ' + error.message);
-                    }
-                });
+              await widgets.requestPayment(paymentData);
             } catch (error) {
-                console.error('Main function error:', error);
-                alert('결제 초기화 중 오류가 발생했습니다: ' + error.message);
+              console.error("Payment request error:", error);
+              alert("결제 요청 중 오류가 발생했습니다: " + error.message);
             }
+          });
+        } catch (error) {
+          console.error("Main function error:", error);
+          alert("결제 초기화 중 오류가 발생했습니다: " + error.message);
         }
+      }
 
-        // 페이지 로드 시 실행
-        window.addEventListener('DOMContentLoaded', main);
+      // 페이지 로드 시 실행
+      window.addEventListener("DOMContentLoaded", main);
     </script>
-
-</body>
+  </body>
 </html>
