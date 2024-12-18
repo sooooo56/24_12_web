@@ -39,24 +39,6 @@ public class OrderController {
     }
 
 
-    @PostMapping("/order_submit")
-    public String submitOrder(@RequestParam Long id,
-                             @RequestParam String color,
-                             @RequestParam String size,
-                             @RequestParam int quantity,
-                             @RequestParam String deliveryAddress,
-                             @RequestParam String phoneNumber,
-                             @AuthenticationPrincipal Member member) {
-
-        orderService.createOrder(member, id, color, size, quantity, deliveryAddress, phoneNumber);
-//        return "redirect:/checkout";
-         return "redirect:/order_success";
-    }
-
-//    @GetMapping("/order_success")
-//    public String submitOrder() {
-//        return "/order/order_success";
-//    }
 
 
 

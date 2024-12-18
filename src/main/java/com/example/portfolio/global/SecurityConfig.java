@@ -23,10 +23,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/join", "/login", "/main", "list", "/", 
-                                        "/payment/**",  // payment 관련 모든 URL 허용
+                        .requestMatchers("/join", "/login", "/main", "list", "/",
+                                        "/payment/**",      // 결제 관련 URL 허용
+                                        "/checkout/**",     // 체크아웃 관련 URL 허용
+                                        "/order/**",        // 주문 관련 URL 허용
                                         "/img/**", "/css/**", "detail/**").permitAll()
-                        .anyRequest().authenticated() // authenticated() 인증된 요청만 들여 보내기. permitAll() 모든 요청 들여 보내기
+                        .anyRequest().authenticated()
                 )
                 .csrf((AbstractHttpConfigurer::disable))
                 .formLogin(form -> form
