@@ -1,16 +1,15 @@
-package com.example.portfolio.order;
+package com.example.portfolio.order.service;
 
 import com.example.portfolio.Member.Member;
 import com.example.portfolio.Member.MemberService;
 import com.example.portfolio.item.Item;
 import com.example.portfolio.item.ItemService;
+import com.example.portfolio.order.entity.Order;
+import com.example.portfolio.order.OrderRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +36,7 @@ public class OrderService {
         if (phoneNumber == null || phoneNumber.isBlank()) {
             throw new IllegalArgumentException("전화번호를 입력하세요.");
         }
-
+        
         Item item = itemService.getItem(id);
         if (item == null) {
             throw new IllegalArgumentException("유효하지 않은 상품 ID입니다.");

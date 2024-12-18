@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{global/layout}">
+<div layout:fragment="content">
+    <div class="container mx-auto p-4">
+        <!-- 주문 정보 표시 -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-2xl font-bold mb-4">주문 정보</h2>
+            <div class="space-y-3">
+                <p>상품명: <span th:text="${item.name}" class="font-medium"></span></p>
+                <p>가격: <span th:text="${#numbers.formatInteger(price, 0, 'COMMA')}" class="font-medium"></span>원</p>
+                <p>색상: <span th:text="${orderForm.color}" class="font-medium"></span></p>
+                <p>사이즈: <span th:text="${orderForm.size}" class="font-medium"></span></p>
+                <p>수량: <span th:text="${orderForm.quantity}" class="font-medium"></span></p>
+                <p>배송지: <span th:text="${orderForm.deliveryAddress}" class="font-medium"></span></p>
+                <p>연락처: <span th:text="${orderForm.phoneNumber}" class="font-medium"></span></p>
+            </div>
+        </div>
+
+        <!-- 결제 위젯 -->
+        <div id="payment-widget" class="mb-4"></div>
+        <div id="agreement" class="mb-6"></div>
+        
+        <!-- 결제하기 버튼 -->
+        <button id="payment-button" 
+                class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors">
+            결제하기
+        </button>
+    </div>
+
+    <!-- 토스페이먼츠 SDK -->
+    <script src="https://js.tosspayments.com/v2/payment-widget"></script>
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const clientKey = 'test_ck_D4yKeq5bgrpKRdMwW0X8wYxzvNPG';
+        const customerKey = [[${member.username}]] || 'ANONYMOUS';
+        const paymentWidget = PaymentWidget(clientKey, customerKey);
+        const price = [[${price}]];
+        
+        async function main() {
+            try {
+                // 결제 UI 렌더링
+                const paymentMethodsWidget = await paymentWidget.renderPaymentMethods(
+                    '#payment-widget',
+                    { value: price },
+                    { variantKey: 'DEFAULT' }
+                );
+
+                // 이용약관 렌더링
+                await paymentWidget.renderAgreement('#agreement');
+
+                // 결제하기 버튼 이벤트
+                const button = document.getElementById('payment-button');
+                button.addEventListener('click', async () => {
+                    try {
+                        await paymentWidget.requestPayment({
+                            orderId: 'order_' + new Date().getTime(),
+                            orderName: [[${item.name}]],
+                            customerName: [[${member.username}]],
+                            customerEmail: [[${member.email}]],
+                            customerMobilePhone: [[${orderForm.phoneNumber}]],
+                            successUrl: window.location.origin + '/payment/success' + 
+                                      '?id=' + [[${orderForm.id}]] + 
+                                      '&color=' + encodeURIComponent([[${orderForm.color}]]) + 
+                                      '&size=' + encodeURIComponent([[${orderForm.size}]]) + 
+                                      '&quantity=' + [[${orderForm.quantity}]] + 
+                                      '&deliveryAddress=' + encodeURIComponent([[${orderForm.deliveryAddress}]]) + 
+                                      '&phoneNumber=' + encodeURIComponent([[${orderForm.phoneNumber}]]),
+                            failUrl: window.location.origin + '/payment/fail'
+                        });
+                    } catch (error) {
+                        console.error('결제 요청 실패:', error);
+                    }
+                });
+            } catch (error) {
+                console.error('위젯 렌더링 실패:', error);
+            }
+        }
+
+        main();
+        /*]]>*/
+    </script>
+</div>
+</html>

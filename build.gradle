@@ -39,6 +39,7 @@ dependencies {
 // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	implementation 'com.tosspayments:payment-sdk:1.0.0'
 
 }
 

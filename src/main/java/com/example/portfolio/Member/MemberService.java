@@ -33,14 +33,6 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-//    public Member getMemberId(Long id){
-//        Optional<Member> member = memberRepository.findById(id);
-//        if (member.isPresent()){
-//            return member.get();
-//        } else {
-//            throw new RuntimeException();
-//        }
-//    }
 
     // 현재 로그인한 회원 조회 메서드 추가
     public Member getCurrentMember() {

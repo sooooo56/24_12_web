@@ -1,7 +1,8 @@
-package com.example.portfolio.order;
+package com.example.portfolio.order.controller;
 
 import com.example.portfolio.Member.Member;
 import com.example.portfolio.item.Item;
+import com.example.portfolio.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -9,8 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
@@ -54,10 +53,11 @@ public class OrderController {
          return "redirect:/order_success";
     }
 
-    @GetMapping("/order_success")
-    public String submitOrder() {
-        return "/order/order_success";
-    }
+//    @GetMapping("/order_success")
+//    public String submitOrder() {
+//        return "/order/order_success";
+//    }
+
 
 
 }

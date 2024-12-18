@@ -1,4 +1,4 @@
-package com.example.portfolio.order;
+package com.example.portfolio.order.entity;
 
 import com.example.portfolio.Member.Member;
 import com.example.portfolio.item.Item;
