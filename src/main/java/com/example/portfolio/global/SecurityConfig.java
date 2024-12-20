@@ -23,11 +23,14 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/join", "/login", "/main", "list", "/",
-                                        "/payment/**",      // 결제 관련 URL 허용
-                                        "/checkout/**",     // 체크아웃 관련 URL 허용
-                                        "/order/**",        // 주문 관련 URL 허용
-                                        "/img/**", "/css/**", "detail/**").permitAll()
+                        .requestMatchers(
+                                "/join", "/login", "/main", "list", "/",
+                                "/order/**",        // 주문 관련 URL
+                                "/confirm",         // 결제 확인 URL
+                                "/img/**", 
+                                "/css/**", 
+                                "detail/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf((AbstractHttpConfigurer::disable))

@@ -1,57 +1,69 @@
 <!DOCTYPE html>
-<html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-  </head>
-  <body>
-    <h2>결제 성공</h2>
-    <p id="paymentKey"></p>
-    <p id="orderId"></p>
-    <p id="amount"></p>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{global/layout}">
 
-    <script>
-      // 쿼리 파라미터 값이 결제 요청할 때 보낸 데이터와 동일한지 반드시 확인하세요.
-      // 클라이언트에서 결제 금액을 조작하는 행위를 방지할 수 있습니다.
-      const urlParams = new URLSearchParams(window.location.search);
-      const paymentKey = urlParams.get("paymentKey");
-      const orderId = urlParams.get("orderId");
-      const amount = urlParams.get("amount");
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">결제 성공</h2>
+        
+        <div class="card">
+            <div class="card-body">
+                <h3>주문 정보</h3>
+                <div th:if="${order != null}">
+                    <p>주문 상품: <span th:text="${order.item.name}"></span></p>
+                    <p>주문 수량: <span th:text="${order.quantity}"></span></p>
+                    <p>배송 주소: <span th:text="${order.deliveryAddress}"></span></p>
+                    <p>연락처: <span th:text="${order.phoneNumber}"></span></p>
+                    <p>결제 금액: <span th:text="${amount}"></span>원</p>
+                    <p>주문 번호: <span th:text="${orderId}"></span></p>
+                </div>
+            </div>
+        </div>
 
-      async function confirm() {
-        const requestData = {
-          paymentKey: paymentKey,
-          orderId: orderId,
-          amount: amount,
-        };
+        <div class="text-center mt-4">
+            <a href="/main" class="btn btn-primary">메인으로 돌아가기</a>
+        </div>
+    </div>
 
-        const response = await fetch("/confirm", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestData),
-        });
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const paymentKey = /*[[${paymentKey}]]*/ '';
+        const orderId = /*[[${orderId}]]*/ '';
+        const amount = /*[[${amount}]]*/ 0;
 
-        const json = await response.json();
+        async function confirmPayment() {
+            try {
+                const response = await fetch("/confirm", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        paymentKey: paymentKey,
+                        orderId: orderId,
+                        amount: amount.toString()
+                    })
+                });
 
-        if (!response.ok) {
-          // 결제 실패 비즈니스 로직을 구현하세요.
-          console.log(json);
-          window.location.href = `/fail?message=${json.message}&code=${json.code}`;
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    window.location.href = `/order/fail?message=${encodeURIComponent(errorData.message)}&code=${encodeURIComponent(errorData.code)}`;
+                    return;
+                }
+
+                const result = await response.json();
+                console.log("Payment confirmed:", result);
+                
+            } catch (error) {
+                console.error("Payment confirmation error:", error);
+                window.location.href = `/order/fail?message=${encodeURIComponent(error.message)}&code=ERROR`;
+            }
         }
 
-        // 결제 성공 비즈니스 로직을 구현하세요.
-        console.log(json);
-      }
-      confirm();
-
-      const paymentKeyElement = document.getElementById("paymentKey");
-      const orderIdElement = document.getElementById("orderId");
-      const amountElement = document.getElementById("amount");
-
-      orderIdElement.textContent = "주문번호: " + orderId;
-      amountElement.textContent = "결제 금액: " + amount;
-      paymentKeyElement.textContent = "paymentKey: " + paymentKey;
+        // 페이지 로드 시 결제 확인
+        window.addEventListener('DOMContentLoaded', confirmPayment);
+        /*]]>*/
     </script>
-  </body>
+</div>
 </html>

@@ -60,9 +60,6 @@ public class PaymentController {
                                @ModelAttribute OrderForm orderForm,
                                Model model) {
         try {
-            // 결제 승인 요청
-//            JSONObject paymentConfirm = confirmPayment(paymentKey, orderId, amount);
-            
             // 결제 성공 시 주문 생성
             Order order = orderService.createOrder(
                 member,
@@ -74,40 +71,30 @@ public class PaymentController {
                 orderForm.getPhoneNumber()
             );
 
-            // success.html에 전달할 데이터 추가
             model.addAttribute("order", order);
             model.addAttribute("member", member);
             model.addAttribute("orderForm", orderForm);
             model.addAttribute("amount", amount);
+            model.addAttribute("paymentKey", paymentKey);
+            model.addAttribute("orderId", orderId);
             
             return "order/success";
+
         } catch (Exception e) {
             log.error("Payment success handling error: {}", e.getMessage());
             return "redirect:/order/fail";
         }
     }
 
-    @GetMapping("/fail")
-    public String paymentFail() {
+    @GetMapping("/order/fail")
+    public String paymentFail(@RequestParam(required = false) String message,
+                            @RequestParam(required = false) String code,
+                            Model model) {
+        model.addAttribute("message", message);
+        model.addAttribute("code", code);
         return "order/fail";
+    }
+    
 
-    }
-    // 모델 속성 추가를 위한 private 메서드
-    private void addAttributesToModel(Model model, Item item, Long price,
-                                    Member member, OrderForm orderForm) {
-        model.addAttribute("item", item);
-        model.addAttribute("price", price);
-        model.addAttribute("member", member);
-        model.addAttribute("orderForm", orderForm);
-    }
-
-    private JSONObject confirmPayment(String paymentKey, String orderId, Long amount) throws Exception {
-        JSONObject requestData = new JSONObject();
-        requestData.put("paymentKey", paymentKey);
-        requestData.put("orderId", orderId);
-        requestData.put("amount", amount);
-        
-        return widgetController.confirmPayment(requestData.toString()).getBody();
-    }
 
 } 
